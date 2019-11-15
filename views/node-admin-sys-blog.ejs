@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章列表</title>
+    <meta name="keywords" content="node-admin-sys">
+    <meta name="description" content="node-admin-sys">
+    <link rel="shortcut icon" href="../images/bitbug_favicon.ico">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <link href="../css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight blog">
+    <div class="row">
+        <div class="col-lg-12">
+            <%
+                for(let i = 0;i<contents.length;i++){
+             %>
+            <div class="ibox">
+                <div class="ibox-content">
+                    <a href="article.html" class="btn-link">
+                        <h2>
+                            <a href="/views?id=<%=contents[i]._id%>" target="_blank"><%=contents[i].title%></a>
+                        </h2>
+                    </a>
+                    <div class="small m-b-xs">
+                        <strong><%=contents[i].user.username%></strong> <span class="text-muted"><i class="fa fa-clock-o"></i> <%=arr[i]%></span>
+                    </div>
+                    <p>
+                        <%=contents[i].description%>
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>标签：</h5>
+                            <button class="btn btn-primary btn-xs" type="button"><%=contents[i].category.name%></button>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="small text-right">
+                                <h5>状态：
+                                    <%
+                                        if(contents[i].live === true){
+                                    %>
+                                    <strong>激活</strong>
+                                    <%}
+                                        else{
+                                    %>
+                                    <strong>
+                                        未激活
+                                    </strong>
+                                    <%}%>
+                                </h5>
+                                <div> <i class="fa fa-comments-o"> </i> <%=comments%>评论 </div>
+                                <i class="fa fa-eye"> </i>浏览 <%=contents[i].views%>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%}%>
+
+        </div>
+    </div>
+</div>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/content.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>node-content-sys</title>
+    <meta name="description" content="node-content-sys" />
+    <meta name="keywords" content="jasonlwy">
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="images/bitbug_favicon.ico">
+
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/8.5/styles/monokai_sublime.min.css">
+    <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/demo.css" />
+
+    <link rel="canonical" href="http://www.ghostchina.com/" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="http://www.ghostchina.com/page/2/" />
+    <script type="text/javascript" src="/shared/ghost-url.min.js?v=a8de6833b5"></script>
+    <script type="text/javascript">
+        ghost.init({
+            clientId: "ghost-frontend",
+            clientSecret: "721352203d6a"
+        });
+    </script>
+    <meta name="generator" content="node-content-sys" />
+    <link rel="alternate" type="application/rss+xml" title="node-content-sys" href="http://www.jasonlwy.cn" />
+</head>
+<body class="home-template">
+
+<!-- start navigation -->
+<nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 topColor">
+                <div style="display: none;" class="navbar-header ">
+                        <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i class="fa fa-bars"></i>
+                        </span>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li class="nav-current" role="presentation"><a href="/">首页</a></li>
+                        <!--<li  role="presentation"><a href="/committeam">摄影</a></li>-->
+                        <!--<li  role="presentation"><a href="/committeam">旅游</a></li>-->
+                        <li  role="presentation"><a href="/about">关于博主</a></li>
+                        <li class="pull-right"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<!-- end navigation -->
+<!-- start site's main content area -->
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+
+            <main class="col-md-8 main-content">
+                <%
+                if(!contents && contents.length  ===0 ){
+                %>
+                <article id="108" class="post">
+                    <div class="post-head">
+                        当前没有博文!!!!!
+                    </div>
+                </article>
+                <%
+                }else{
+                for(let i=0;i<contents.length;i++){
+                %>
+                <article id=108 class="post">
+                    <div class="post-head">
+                        <h1 class="post-title"><a href="/custom-excerpts/"><%=contents[i].title%></a></h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/wangsai/"><%=contents[i].user.username%></a></span> &bull;
+                            <time class="post-date" datetime="2019年8月9日星期三下午4点57分" title="2019年8月9日星期三下午4点57分"><%=arr[i].toString()%></time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p><%=contents[i].description%></p>
+                    </div>
+                    <div class="post-permalink">
+                        <!--点击获取全文-->
+                        <a href="/views?id=<%=contents[i]._id%>" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <%=contents[i].category.name%>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+                <%
+                }
+                }
+                %>
+                <nav class="pagination" role="navigation">
+                    <%
+                    if(page==1){
+                    %>
+                    <span class="page-number">当前<%=page%>页 总共<%=pages%></span>
+                    <a class="older-posts" href="/contents?id=<%=contents[0].category._id%>&page=<%=page+1%>"><i class="fa fa-angle-right"></i></a>
+                    <%
+                    }else if(page==pages){
+                    %>
+                    <a class="older-posts" href="/contents?id=<%=contents[0].category._id%>&page=<%=page-1%>"><i class="fa fa-angle-left"></i></a>
+                    <span class="page-number">当前<%=page%>页 总共<%=pages%></span>
+                    <%
+                    }else{
+                    %>
+                    <a class="older-posts" href="/contents?id=<%=contents[0].category._id%>&page=<%=page-1%>"><i class="fa fa-angle-left"></i></a>
+                    <span class="page-number">当前<%=page%>页 总共<%=pages%></span>
+                    <a class="older-posts" href="/contents?id=<%=contents[0].category._id%>&page=<%=page+1%>"><i class="fa fa-angle-right"></i></a>
+                    <%
+                    }
+                    %>
+                </nav>
+            </main>
+            <aside class="col-md-4 sidebar">
+                <!-- start widget -->
+                <!-- end widget -->
+                <!-- start tag cloud widget -->
+                <div class="widget">
+                    <h4 class="title">用户区域</h4>
+                    <div class="content community">
+                        <%
+                        if(!session.loginUser){
+                        %>
+                        <p>未登录</p>
+                        <p><a href="/login"><i class="glyphicon glyphicon-user"></i> &nbsp;登陆</a></p>
+                        <p><a href="/register"><i class="glyphicon glyphicon-pencil"></i>&nbsp; 注册</a></p>
+                        <%
+                        }else{
+                        %>
+                        <p>用户: <%=session.loginUser.username%></p>
+                        <p><a href="/logout">退出</a></p>
+                        <%
+                        }
+                        %>
+                    </div>
+                </div>
+                <!-- end tag cloud widget -->
+
+                <!-- start widget -->
+                <div style="display: none;" class="widget">
+                    <h4 class="title">下载 Ghost</h4>
+                    <div class="content download">
+                        <a href="/download/" class="btn btn-default btn-block" onclick="_hmt.push(['_trackEvent', 'big-button', 'click', '下载Ghost'])">Ghost 中文版（0.6.0）</a>
+                    </div>
+                </div>
+                <!-- end widget -->
+                <!-- start tag cloud widget -->
+                <div class="widget">
+                    <h4 class="title">文章分类</h4>
+                    <div class="content tag-cloud">
+                        <!--分类展示-->
+                        <%
+                        if(!categorys && categorys.length ==0){
+                        %>
+                        <p>没有任何文章分类！！！</p>
+                        <%
+                        }else{
+                        for(let i =0;i<categorys.length;i++){
+                        %>
+                        <!--根据分类ID查询该分类的所有文章-->
+                        <a href="/contents?id=<%=categorys[i]._id%>&page=1"><%=categorys[i].name%></a>
+                        <%
+                        }
+                        }
+                        %>
+                    </div>
+                </div>
+                <!-- end tag cloud widget -->
+            </aside>
+
+        </div>
+    </div>
+</section>
+<a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//cdn.bootcss.com/fitvids/1.1.0/jquery.fitvids.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/8.5/highlight.min.js"></script>
+<script src="//cdn.bootcss.com/magnific-popup.js/1.0.0/jquery.magnific-popup.min.js"></script>
+<script src="js/demo.js"></script>
+<script>
+    $(function(){
+        $('.post-content img').each(function(item){
+            var src = $(this).attr('src');
+
+            $(this).wrap('<a href="' + src + '" class="mfp-zoom" style="display:block;"></a>');
+        });
+    });
+</script>
+
+<script>
+    window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<script>
+    $(function(){
+        var version = '0.7.4';
+        var $download =  $('.download > a').first();
+        var html = $download.html().replace(/\d\.\d\.\d/, version);
+        $download.html(html);
+    });
+</script>
+<script type="text/javascript">
+    var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F6338835ad35c6d950a554fdedb598e48' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+</body>
+</html>

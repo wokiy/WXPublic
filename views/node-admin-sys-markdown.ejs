@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>node-admin-sys</title>
+    <meta name="keywords" content="node-admin-sys">
+    <meta name="description" content="node-admin-sys">
+    <link rel="shortcut icon" href="../images/bitbug_favicon.ico">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/plugins/markdown/bootstrap-markdown.min.css" />
+    <link href="../css/style.min.css" rel="stylesheet">
+    <link href="../css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <style>
+        .form-group{
+            height: 50px;
+        }
+        .control-label{
+            line-height: 30px;
+            text-align: center;
+        }
+        #tip{
+            visibility: hidden;
+        }
+        #err-tip{
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <form id="reportPicform" action="/admin/images" method="post" enctype="multipart/form-data">
+                    <div class="ibox-content" style="display: none;">
+                    <div  class="form-group" style="height: unset;">
+                        <label for="file">帖子封面！！！！</label>
+                        <input style="display: inline-block;margin-left: 2em;" type="file" id="exampleInputFile" name="f1" multiple="multiple">
+                        <% if(!session.img && session.img == null){
+                        %>
+                            <span>还未上传图片</span>
+                        <%
+                        }else{
+                            var arr = session.img;
+                            for(var i = 0;i<arr.length;i++){
+                        %>
+                         <img src="<%=arr[i]%>" alt="" width="100" height="100" class="img-circle imgnum">
+                        <%
+                        }
+                        }
+                        %>
+                    </div>
+                    <button id="inputButton" type="button" class="btn btn-primary" onclick="submitPic()">上传</button>
+                        <!--清空伪删除图片-->
+                    <button id="clearButton" type="button" class="btn btn-danger">删除封面</button>
+                    </div>
+                </form>
+            </div>
+
+            <div  class="ibox float-e-margins">
+                <form id="myform" action="/admin/addContent" method="post">
+                    <div class="ibox-content">
+                    <span id="tip">
+                            <%=msg.success%>
+                        </span>
+                        <span id="err-tip">
+                            <%=msg.err%>
+                    </span>
+                        <!--<h2>文章发布</h2>-->
+                        <!--文章标题-->
+                        <div class="form-group">
+                            <label  class="col-sm-1 control-label">内容标题</label>
+                            <div class="col-sm-2">
+                                <input id="title" name="title"  type="text" class="form-control">
+                            </div>
+                        </div>
+                        <!--文章简介-->
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">
+                                内容简介
+                            </label>
+                            <div class="col-sm-6">
+                                <input id="description" name="description" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <!--文章分类下拉列表-->
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">所属类目</label>
+                            <div class="col-sm-2">
+                                <select class="form-control m-b" name="category" id="category">
+                                    <%
+                                    for (let i = 0;i<categorys.length;i++){
+                                    %>
+                                    <option value="<%=categorys[i]._id%>"><%=categorys[i].name%></option>
+                                    <%
+                                    }
+                                    %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>文本内容编辑器</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_editors.html#">
+                                                <i class="fa fa-wrench"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-user">
+                                                <li><a href="form_editors.html#">选项1</a>
+                                                </li>
+                                                <li><a href="form_editors.html#">选项2</a>
+                                                </li>
+                                            </ul>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                    <!-- <textarea id="content" name="content" data-provide="markdown" rows="10">
+                                    </textarea> -->
+                                     <script id="editor" name="content" type="text/plain" style="width:100%;height:500px;"></script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-1">
+                                <button class="btn btn-primary" type="submit">保存内容</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/content.min.js"></script>
+<script type="text/javascript" src="../js/plugins/markdown/markdown.js"></script>
+<script type="text/javascript" src="../js/plugins/markdown/to-markdown.js"></script>
+<script type="text/javascript" src="../js/plugins/markdown/bootstrap-markdown.js"></script>
+<script type="text/javascript" src="../js/plugins/markdown/bootstrap-markdown.zh.js"></script>
+<script src="../js/plugins/toastr/toastr.min.js"></script>
+
+<script type="text/javascript" charset="utf-8" src="../ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="../ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="../ueditor/lang/zh-cn/zh-cn.js"></script>
+<!--栏目添加显示结果-->
+<script>
+    var ue = UE.getEditor('editor');
+    
+    var textSuc =  $('#tip').text().trim();
+    var textErr =  $('#err-tip').text().trim();
+    console.log(textSuc);
+    //提示配置信息
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "positionClass": "toast-top-right",
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+    //根据后台返回的数据结果显示提示的内容
+    //成功情况
+    if (textSuc === 'ok'){
+        toastr.success('内容添加成功！！！')
+        $('#myform').reset();
+    } else if (textErr === "err"){
+        toastr.error('内容添加不规范!!!!!')
+    }
+    function submitPic(){
+        var fileInput = $('#exampleInputFile').get(0).files[0];
+        console.info(fileInput);
+        if(fileInput){
+            toastr.success('图片上传！！！')
+            $('#reportPicform').submit();
+        }else{
+            toastr.error('请选择图片上传!!1')
+        }
+    }
+    $('#clearButton').click(function () {
+        var imgs = ('.imgnum');
+        console.log(imgs.length);
+        if(!imgs){
+            toastr.error('请选择图片上传!!1')
+        }else{
+            $.ajax({
+                url:"/admin/clearimgsession",
+            });
+        }
+    })
+
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>node-admin-sys</title>
+    <meta name="keywords" content="node-admin-sys">
+    <meta name="description" content="node-admin-sys">
+    <link rel="shortcut icon" href="../images/bitbug_favicon.ico">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/plugins/markdown/bootstrap-markdown.min.css" />
+    <link href="../css/style.min.css" rel="stylesheet">
+    <link href="../css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <style>
+        .form-group{
+            height: 50px;
+        }
+        .control-label{
+            line-height: 30px;
+            text-align: center;
+        }
+        #tip{
+            visibility: hidden;
+        }
+        #err-tip{
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div  class="ibox float-e-margins">
+                <form action="/admin/add_Category" method="post">
+                    <div class="ibox-content">
+                        <!--栏目名-->
+                        <span id="tip">
+                            <%=msg.success%>
+                        </span>
+                        <span id="err-tip">
+                            <%=msg.err%>
+                        </span>
+                        <div class="form-group">
+                            <label  class="col-sm-1 control-label">部门名称</label>
+                            <div class="col-sm-2">
+                                <input id="name" name="name"  type="text" class="form-control">
+                            </div>
+                        </div>
+                        <!--栏目简介-->
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">
+                                部门简介
+                            </label>
+                            <div class="col-sm-6">
+                                <input id="description" name="description" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-1">
+                                <button class="btn btn-primary" type="submit">保存内容</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/content.min.js"></script>
+<script type="text/javascript" src="../js/plugins/markdown/markdown.js"></script>
+<script type="text/javascript" src="../js/plugins/markdown/to-markdown.js"></script>
+<script type="text/javascript" src="../js/plugins/markdown/bootstrap-markdown.js"></script>
+<script type="text/javascript" src="../js/plugins/markdown/bootstrap-markdown.zh.js"></script>
+<script src="../js/plugins/toastr/toastr.min.js"></script>
+
+<!--栏目添加显示结果-->
+<script>
+   var textSuc =  $('#tip').text().trim();
+   var textErr =  $('#err-tip').text().trim();
+    //提示配置信息
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "positionClass": "toast-top-right",
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+    //根据后台返回的数据结果显示提示的内容
+    //成功情况
+    if (textSuc === 'ok'){
+        toastr.success('栏目添加成功！！！')
+    } else if (textErr === "err"){
+        toastr.error('内容不规范或为空或已存在!!!!!')
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+
+<script>
+
+    var str= `
+        <div>
+            <A href="www.baidu.com/"></A>
+            <a href="http://www.baidu1.com/"></a>
+            <a href='https://www.baidu2.com/'></a>
+        </div>
+`;
+
+    var aHrefRegExp =  /<a[^>]+href=['"]([^'"]*)['"]>/gi;
+
+    var httpRegExp = /(http|https)/;
+
+    var arr=str.toLowerCase().match( aHrefRegExp );
+
+    for(var i = 0; i < arr.length; i++){
+
+        var ss = arr[i].toLowerCase().match( aHrefRegExp );
+
+        var temp = RegExp.$1;
+
+        if( httpRegExp.test( temp ) ){
+            console.log( '有http '+ temp );
+        }else{
+            console.log( '没有http '+ temp );
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+    var str = '<a href="http://www.baidu.com">链接111111111</a> ';
+    var reg1 = /href=\"(.+)\"/g;
+    var reg2 = /\">(.+)<\/a>/g;
+    var retVal1 = reg1.exec(str);
+    var retVal2 = reg2.exec(str);
+    console.log(retVal1[1]);
+    console.log(retVal2[1]);
+</script>
+</body>
+</html>
+</body>
+</html>
