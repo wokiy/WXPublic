@@ -1,83 +1,146 @@
-# WXPublic
-> 企业微信公总号开发过程记录
+# node-content-sys
+>node内容发布系统,界面布局统一使用响应式布局，ejs 数据渲染，后台响应式布局实现node-content-sys的管理后台关系系统，数据库是使用mongodb实现存储。
 
-### 申请公众号
-- 登录地址 ： https://mp.weixin.qq.com/，注册-选择类型
-- 公众号，服务号类型查看  账号类型区别 ：http://kf.qq.com/faq/170815aUZjeQ170815mU7bI7.html
-- 公众号申请流程 ： http://kf.qq.com/product/weixinmp.html#hid=99
+* 代码千万行 注释第一行 注释不规范 后续两行泪
 
-### 开发准备
+# node-content-sys 内容帖子系统后续会不断完善
 
-- 创建web项目（node.js） 搭建开发环境
-- 公众号账号登录后，会看到一个首页界面，请熟悉界面左侧菜单：
-- 在“功能”菜单下面，不需要自己开发，可以实现的基本功能，编辑完成可以查看公众号，实现简单的公众号。
-- 在“设置”菜单下，公众号设置可以查看“设置详情”，点击“功能设置”，有一个“网页授权域名”这个设置的是你web项目发布后的域名。
-- 微信认证流程：http://kf.qq.com/product/weixinmp.html#hid=97
-- “开发”菜单下的“基本配置”可以看到“公众号开发信息”需要先设置secret和ip白名单，这三个信息在“开发者工具”下的“开发者文档”获取access_token时会用到。
-- 请熟悉“开发者文档”！https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1445241432
+> 小项目缺陷： 没有对表单添加判断操作，按照最正确的方式擦做表单即可。
 
-### 开发者文档
+1. 具备信息发布系统的功能
+2. 具备后台管理系统和前台系统
+3. 具备session登陆管理和评论管理
+4. 百度编辑器编辑帖子内容发布
+5. 具备图片上传功能
+6. 具备个人资料管理和用户中心
+7. 普通用户发帖需要博主审核展示(未开放!!!)
+8. 用户发帖以markdown编辑器发布(未开放)
+9. 帖子具备点赞和用户收藏功能
 
-##### 获取access_token
-- 在创建好的web项目中，新建WxController.java,wx.js根据文档 (https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140183) 获取
-- 通过OkHttp做get请求，请求 https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET
-- 公众号账号登录—基本配置—公众号开发信息，可以获取到appid和secret两个参数；
-- 如果与文档正确返回结果一致，即获取成功
+# NSC系统功能展示
 
-##### 自定义菜单创建接口
+#### 登陆功能实现
+> 详情看源码
 
-- 仔细阅读文档 https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141013
-- Token获取后，根据自定义菜单请求格式创建菜单，将token以及菜单作为参数通过okhttp的post请求创建菜单，若与文档正确结果一致则成功
-  ，此时打开微信公众号，可以看到手机上出现菜单（注：只有修改创建菜单的代码才需要对创建菜单做post请求）；
+![login](/public/img/login.png)
+
+#### 注册功能实现
+> 详情看源码
+
+![register](/public/img/register.png)
+
+
+#### 首页展示
+  > 内容列表具体看个人爱好
   
-##### 微信网页开发
+![ss](/public/img/ii4.png)  
 
-- 仔细阅读文档 https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842
-- 了解Scope的snsapi_base和snsapi_userinfo区别；
-- 了解网页授权access_token和普通access_token的区别；
+#### 文章展示和评论
 
-```
-  第一步获取code：
+> 新增今日最热帖子
 
-    访问链接URL：
+***思路:对帖子进行降序排序截取前几条浏览量最多和评论最多的***
 
-    https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect 
+ ![node文章展示页](/public/img/ivewss.png)
+ 
+#### 登陆页面展示（markdown编辑器发布的效果）
 
-    用户同意后，跳转redirect_uri/?code=CODE&state=STATE；
+> 原理是node express Web框架 使用markdown-js模块 ， 将markdown语法的 'content' 内容转换为 html 再ejs模板中直接渲染!!!
 
-    其中redirect_uri：
+ 
+ #### 资源查询
+ 
+ > 统一返回界面
+ 
+ ![界面显示](/public/img/none.png)
+ 
+> 个人中心展示页面 个人信息和参与的内容帖子
 
-    public static String AppDomain = "www.baodu.com";（网页授权域名）
+![个人中心](/public/img/center.png)
 
-    String back_url = "http://" + AppDomain + "/wx/back/openid";
+> 个人中心头像修改功能实现
 
-    String redirect_uri = URLEncoder.encode(back_url, "utf-8");
+![用户头像修改](/public/img/ct2.png) 
+ 
+> 修改个人信息
 
-    （授权后重定向的回调链接地址，请使用urlEncode对链接进行处理）
+![个人信息](/public/img/more.png) 
+ 
+## 后台展示
 
-    所以，只需要配好URL的参数，然后 return "redirect:" + url; 就会自动跳转到redirect_uri/?code=code&state=state;（注：链接里的code就是要作为，获取access_token的参数的）
+### 后台首页
+#### 用户列表管理
+> 已实现查询所有用户展示修改（20190430具体用户操作代码还没上传！！！！）
+![用户列表](/public/img/f.png)
 
-    将code作为参数请求下面链接：
+1. 列表用户操作确认弹出框添加(用户删除操作 是伪删除 用户数据是宝贵的 不会随便删除！！！！)
 
-    https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code 
+![用户操作](/public/img/aa.png)
+#### 文章发布管理 
+> 内容界面实现 文章内容添加实现
 
-    若请求成功，就获取网页access_token和"openid":"OPENID"；
+![用户列表](/public/img/SS.png)
 
-    如果scope为snsapi_base流程到这里就结束了；
+#### 内容管理后台内容展示列表 
 
-    如果想拿用户信息，需要将scope改为 snsapi_userinfo，才可以接着通过okhttp的get请求访问
+> 内容列表无限展示 点击内容title实现跳转到前台页面
 
-    https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN ；
-
-    如果正确最终返回json格式的用户信息，你可以将json解析传给对象，对用户信息进行入库操作等。
-```
-
-
-
-
+![内容列表展示](/public/img/QQ.jpg)
 
 
+#### 内容添加成功显示
 
+![内容成功发布](/public/img/add.png)
+
+##### 内容首页封面图片添加或内容图片添加功能
+> 简单markdown 语法加单独图片上传功能
+
+![图片](/public/img/p1.png)
+
+> 添加图片功能业务bug 未设置图片上传后删除的功能 重新上传的操作 markdown编辑器存在不能上传本地图片的缺陷
+本本帖设计之初就是简单问文字发布 但是可以发布图片 不能嵌套再帖子文字中。项目就不修改了！！！
+
+![图片](/public/img/p2.png)
+
+#### 内容列表
+> 已实现内容文章删除功能
+
+![列表](/public/img/LL.png)
+
+#### 栏目管理
+> 实现栏目列表展示、栏目添加、栏目添加tip提示、栏目修改编辑
+
+![栏目编辑](/public/img/CC.png)
+
+#### 用户评论列表
+
+>全部展示用户评论的列表
+
+![全部评论](/public/img/comments.png) 
+
+##### 评论删除功能实现
+> 根据live状态伪删除用户评论(具体看源码操作)
+![评论删除](/public/img/admin_delete.png)
+
+
+
+## 项目整体架构分析
+> 技术选型 node express+ejs boostrap
+ 
+1. web应用程序{Express 是一种保持最低程度规模的灵活 Node.js Web 应用程序框架，为 Web 和移动应用程序提供一组强大的功能}
+2. API {各种HTTP使用程序方法和中间件，快速方便地创建强大的API}
+3. 性能 {EXpress 提供精简 web应用程序功能}
+
+
+
+## mongodb数据库设计
+> node操作mongodb数据库实现 （还木有添加）
+
+## 项目运行
+1. 具备node环境 npm install
+2. 具备 mongodb 并且服务开启(自己配置数据库 新建数据库 本人数据库:blog2 以提供基本mongodb数据库脚本 public 目录下 mongodb.sql)
+
+   
 
 
 

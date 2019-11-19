@@ -1,4 +1,6 @@
 .DS_Store
 node_modules/
+public/file/
+public/images/
 dist/
 npm-debug.log

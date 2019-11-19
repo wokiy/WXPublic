@@ -43,7 +43,6 @@ function checklogin(req,res,next) {
 }
 //登陆方法/*登陆方法实现*/
 
-
 //注册方法
 router.post("/register",function (req,res) {
     var username = req.body.username.trim();
@@ -107,7 +106,6 @@ router.post("/login",function (req,res) {
     }); 
 });
 
-
 //api接口方式测试
 router.get("/loginApi",function (req,res) { 
     // 获取前台页面传过来的参数
@@ -143,7 +141,6 @@ router.get("/loginApi",function (req,res) {
 
     })
  });
-
 
 //跳转到用户管理页面
 router.get("/user_list",checklogin,function (req,res) {
@@ -271,7 +268,7 @@ router.get("/addContent",checklogin,function (req,res) {
 //上传图片
 router.post("/images",checklogin,function (req,res) {
     //上传图片解析问题
-    console.log(req.files);
+    // console.log(req.files);
     //新文件名字
      let newName  = req.files[0].path + pathLib.parse(req.files[0].originalname).ext;
      newName2 = newName.substring(6);
@@ -284,7 +281,7 @@ router.post("/images",checklogin,function (req,res) {
         var img = req.session.img;
         img.push(newName2);
     }
-    console.log(req.files);
+    // console.log(req.files);
     fs.rename(req.files[0].path,newName,function (err) {
         if(err){
             res.err = "上传失败！！";
@@ -386,72 +383,61 @@ router.get("/index_v3",checklogin,function (req,res) {
 
 //跳转到部门文件文档管理中心
 router.get("/fileController",checklogin,function (req,res) {
-
-    //每页显示的条数
-    let limit = 8;
-    //页数
-    let page = Number(req.query.page||1);
-    //过滤数目
-    let skip = (page-1)*limit;
-    //总页数初始化
-    let pages = 0;
-    Content.count().then(function (count) {
-        //页数
-        pages = Math.ceil(count/limit);
-        //最大page
-        res.page = Math.min(page,pages-1);
-        //设置最小
-        res.page = Math.max(page,1);
-        if(page<1 ){
-            page=1;
-        }else if(page>pages){
-            page=page-1;
+    Content.find({}).sort({_id:-1}).populate(['category','user']).then(function (contents) {
+        let arr =[];
+        for(let i=0;i<contents.length;i++){
+            let nowT = contents[i].addTime;
+            let now = moment(nowT).format("YYYY-MM-DD HH:mm:ss");
+            arr.push(now);
         }
-        res.page=page;
-        Content.find({}).limit(limit).skip(skip).sort({_id:-1}).populate(['category','user']).then(function (contents) {
-            let arr =[];
-            for(let i=0;i<contents.length;i++){
-                let nowT = contents[i].addTime;
-                let now = moment(nowT).format("YYYY-MM-DD HH:mm:ss");
-                arr.push(now);
+        //循环遍历获取contents数据结构中的contents内容并用正则的匹配方式将a标签塞到一个数据结构中。
+        //arrContents数组包含内容中的所有a标签的href中的链接
+        var arrContents = [];
+        for (let j = 0; j<contents.length; j++) {
+            //获取子文档中的contents的String内容
+            let childContent = contents[j].contents;
+            let childArr = [];
+            // console.log(contents[2].contents)
+            //正则获取所有的a标签
+            let reg = /<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi;
+            while(reg.exec(childContent)){
+                childArr.push(RegExp.$1);
             }
-            //循环遍历获取contents数据结构中的contents内容并用正则的匹配方式将a标签塞到一个数据结构中。
-            //包含所有文件a标签数组
-            // console.log(contents);
-            // console.log(contents.length);
+            //这是输出整个 <a></a>标签
+            // let found = childContent.match(reg);
+            //拼接found数组存入到arrContents数组中.
+            arrContents = arrContents.concat(childArr);
+        }
 
-            var arrContents = [];
-            for (let j = 0; j<contents.length; j++) {
-                //获取子文档中的contents的String内容
-                let childContent = contents[j].contents;
-                // console.log(contents[2].contents)
-                //正则获取所有的a标签
-                let reg = /<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi;
-                let found = childContent.match(reg);
-                //拼接found数组存入到arrContents数组中.
-                arrContents = arrContents.concat(found);
+        //获取所有a标签的文字.保存在arrContentTexts数组中
+        var arrContentTexts = [];
+        for (let i = 0;i<contents.length;i++){
+            //获取子文档中的contents的String内容
+            let childContent = contents[i].contents;
+            let childArr = [];
+            //正则获取a标签中的文字
+            let reg = /<a[^>]*>((?:(?!<\/a>)[\s\S])*)<\/a>/gi;
+            while(reg.exec(childContent)){
+                childArr.push(RegExp.$1);
             }
-            // console.log(arrContents);
+            //拼接found数组存入到arrContents数组中.
+            arrContentTexts = arrContentTexts.concat(childArr);
+        }
 
-            res.render("node-admin-filecontroller",{
-                contents:contents,
-                categorys:res.categorys,
-                count:count,
-                pages:pages,
-                page:res.page,
-                arr:arr,
-                arrContents:arrContents,//文件内容
-                //热帖子
-                contentHost:res.contentsHost
-            });
+        // console.log(arrContentTexts);
+
+        res.render("node-admin-filecontroller",{
+            contents:contents,
+            categorys:res.categorys,
+            arr:arr,
+            arrContents:arrContents,//文件内容的超链接
+            arrContentTexts:arrContentTexts,//文件内容a的text内容
+            //热帖子
+            contentHost:res.contentsHost
         });
     });
 
-
-
-
 });
-
 
 //用户列表查询显示
 router.get("/userList",checklogin,function (req,res) {
@@ -508,7 +494,7 @@ router.get("/adminList",checklogin,function (req,res) {
         userType = 'admin';
         //总页数
         pages = Math.ceil(count/limit);
-        console.log(count);
+        // console.log(count);
         //最大页数
         page = Math.min(page,pages-1);
         //最小页数

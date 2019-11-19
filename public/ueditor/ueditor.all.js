@@ -8066,7 +8066,8 @@ UE.Editor.defaultOptions = function(editor){
         scaleEnabled: false,
         tableNativeEditInFF: false,
         autoSyncData : true,
-        fileNameFormat: '{time}{rand:6}'
+        // fileNameFormat: '{time}{rand:6}'
+        fileNameFormat: '{filename}'
     }
 };
 

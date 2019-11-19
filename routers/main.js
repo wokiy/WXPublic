@@ -219,14 +219,19 @@ router.get("/views",function (req,res) {
 
         // 正则获取 a标签中的文字
         var reg1 = /<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi;
-        var found = text.match(reg1);
-        console.log(found);
+        // var found = text.match(reg1);
+        while(reg1.exec(text)){
+            console.log(RegExp.$1)
+        }
+        // console.log(found);
 
         //正则获取a标签中的文字
         // var reg = /<a[^>]*>((?:(?!<\/a>)[\s\S])*)<\/a>/gi;
+        // let a = [];
         // while(reg.exec(text)){
-        //     console.log(RegExp.$1);
+        //     a.push(RegExp.$1);
         // }
+
 
         // let html = markdown.makeHtml(text);
         //查询该帖子的评论文档

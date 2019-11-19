@@ -82,20 +82,21 @@
                     <div>
                         <p>没有文件！！！！</p>
                     </div>
-                    <%}else{
-                        for (let i =0;i<arrContents.length;i++){
-                        %>
+                    <%  }
+                        else{
+                            for (let i =0;i<arrContents.length;i++){
+                    %>
                     <div class="file-box">
                         <div class="file">
-                            <a href="#">
+                            <a class="Href-target" href="<%=arrContents[i]%>" download="<%=arrContentTexts[i]%>">
                                 <span class="corner"></span>
                                 <div class="icon">
                                     <i class="fa fa-file"></i>
                                 </div>
                                 <div class="file-name">
-                                   <%-arrContents[i]%>
+                                    <%=arrContentTexts[i]%>
                                     <br/>
-                                    <small>添加时间：2014-10-13</small>
+                                    <small>添加时间：2019-11-14</small>
                                 </div>
                             </a>
                         </div>
@@ -104,10 +105,9 @@
                             }
                         }
                     %>
-
-
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -118,7 +118,36 @@
     $(document).ready(function () {
         $(".file-box").each(function () {
             animationHover(this, "pulse")
+        });
+        //文档快被部门员工点击触发文档下载事件！
+        // $('.Href-target').click(function () {
+        //     alert("点我就是要下载文档-文档下载！！！");
+        //
+        // });
+        //
+        // let $a = $('.a-wrap a:nth-last-child(1)');
+        // console.log($a[0]);
+
+
+
+        $('.Href-target:first-child').each(function (index) {
+            let _index = index;
+            let $a = $('.a-wrap a:nth-last-child(1)');
+            let $dom = $a[_index];
+            let $href = $($dom).attr("href");
+            $(this).attr("href",$href);
+            // console.log($href)
+
+            // $(this).click(function () {
+            //     // $('.a-wrap:eq(index) a:nth-last-child(1)');
+            //    alert("sdsda");
+            //     let $a = $('.a-wrap a:nth-last-child(1)');
+            //    console.log($a[_index])
+            // })
+
         })
+
+
     });
 </script>
 
